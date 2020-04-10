@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="1347763c-e430-4637-b8f6-68ee079cd1c4" >
+		<file:connection workingDir="C:\Users\evsanche\Documents\Evelyn\project\Udemy\workspace\activemq-app\src\main\resources" />
+	</file:config>
+	<flow name="consume-appFlow" doc:id="61247a61-b31f-45aa-8ecd-9d8755981e26" >
+		<http:listener doc:name="Listener" doc:id="97f2414a-336a-456c-9bef-56297b5b33e8" config-ref="HTTP_Listener_config" path="/consumer" />
+		<logger level="INFO" doc:name="Logger" doc:id="04672433-f89e-4d33-80eb-1a8634aa3f6a" message="#[payload]" />
+		<jms:publish doc:name="Publish" doc:id="3823246c-f400-4d79-a655-4b08476fbcb8" config-ref="JMS_Config" destination="CQ3"/>
+		<jms:consume doc:name="Consume" doc:id="c87fd16d-dd25-47c1-aa8a-7b80c81b1a7e" config-ref="JMS_Config" destination="CQ3">
+			<jms:consumer-type >
+				<jms:queue-consumer />
+			</jms:consumer-type>
+		</jms:consume>
+		<file:write doc:name="Write" doc:id="2b541a52-c8b0-4e98-8d30-c88f22e92550" config-ref="File_Config" path="C:\Users\evsanche\Documents\Evelyn\project\Udemy\workspace\activemq-app\src\main\resources\consumeMesg"/>
+		<logger level="INFO" doc:name="Logger" doc:id="acde7caa-3435-4062-a621-a7a9b4793b70" message="#[payload]"/>
+	</flow>
+</mule>
